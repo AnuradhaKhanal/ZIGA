@@ -1,7 +1,7 @@
-import userRoute from "./user.route.js";
-// import messageRoute from "./message.route.js";
+import { validatePhoneNumber, validateGender, validateEmail } from "./validation.js";
 
 export default {
-  userRoute,
-  // messageRoute,
+  validatePhoneNumber,
+  validateGender,
+  validateEmail,
 };
