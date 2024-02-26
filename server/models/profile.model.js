@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
-import util from "../util/index.js";
 
 const profileSchema = mongoose.Schema({
   id: { type: String },
   user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
-  location: { type: String },
+  isTechincal: { type: Boolean, required: true },
+  introBody: { type: String, required: true, trim: true },
+  ideaType: { type: String, required: true },
+  startingType: { type: String, required: true },
+  workArea: { type: String, required: true },
+  location: { type: String, required: true },
   imageURL: { type: String },
 });
 
-export default mongoose.model("UserProfile", profileSchema);
+export default mongoose.model("Profile", profileSchema);

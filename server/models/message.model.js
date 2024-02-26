@@ -8,6 +8,7 @@ const messageSchema = mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   readStatus: { type: Boolean, default: false },
   deliveryStatus: { type: Boolean, default: false },
+  starMessage: { type: Boolean, default: false },
 });
 
 export default mongoose.model("Message", messageSchema);

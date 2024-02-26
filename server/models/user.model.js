@@ -3,15 +3,11 @@ import util from "../util/index.js";
 
 const userSchema = mongoose.Schema({
   id: { type: String },
-  username: { type: String, required: true, unique: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
+  username: { type: String, required: true, trim: true },
   gender: { type: String, required: true, validate: (val) => util.validateGender(val) },
-  phone: { type: String, required: true, unique: true, validate: (val) => util.validatePhoneNumber(val) },
-  email: { type: String, required: true, unique: true, validate: (val) => util.validateEmail(val) },
-  password: { type: String, required: true },
-  confirmpassword: { type: String, required: true },
-  profile: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "UserProfile" },
+  phone: { type: String, required: true, trim: true, unique: true, validate: (val) => util.validatePhoneNumber(val) },
+  email: { type: String, required: true, unique: true, trim: true, validate: (val) => util.validateEmail(val) },
+  profile: { type: mongoose.Schema.Types.ObjectId, ref: "Profile" },
 });
 
 export default mongoose.model("User", userSchema);
