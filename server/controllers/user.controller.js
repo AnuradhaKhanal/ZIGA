@@ -1,52 +1,91 @@
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
 import model from "../models/index.js";
+import util from "../util/index.js";
 
-const secret = "test";
-
-//sign in
-export const signin = async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const oldUser = await model.User.findOne({ username });
-    if (!oldUser) return res.status(404).send({ message: "User doesn't exist" });
-    const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
-    if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
-    const token = jwt.sign({ username: oldUser.username, id: oldUser._id }, secret, {
-      expiresIn: "2h",
-    });
-    res.status(200).send({ result: oldUser, token });
-  } catch (err) {
-    res.status(500).send({ message: "Something went wrong" });
-  }
-};
+dotenv.config();
+const secret = process.env.JWT_SECRET;
 
 //sign up
 export const signup = async (req, res) => {
-  const { username, email, name, password, confirmpassword } = req.body;
+  const { username, phone, gender, email } = req.body;
   try {
-    const oldUser = await model.User.findOne({ username });
-    const oldUserEmail = await User.findOne({ email });
-    if (password !== confirmpassword) {
-      return res.status(400).send({ message: "Passwords don't match" });
-    } else if (oldUser) {
-      return res.status(400).send({ message: "User already exists" });
-    } else if (oldUserEmail) {
-      return res.status(400).send({ message: "Email already registered" });
+    const userPayload = await model.User.findOneAndUpdate(
+      {
+        phone,
+        email,
+      },
+      {
+        username,
+        gender,
+      },
+      { new: true }
+    );
+
+    if (userPayload) {
+      const token = jwt.sign({ email: userPayload.email, phone: userPayload.phone, id: userPayload._id }, secret, {
+        expiresIn: "2h",
+      });
+      const authPayload = {
+        userPayload,
+        token,
+      };
+      return res.status(201).send({ data: authPayload, success: true, message: "Signup successful" });
+    } else {
+      return res.status(400).send({ success: false, message: "Signup failed" });
     }
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const result = await model.User.create({
-      username,
-      email,
-      name,
-      password: hashedPassword,
-      confirmpassword: hashedPassword,
-    });
-    const token = jwt.sign({ username: result.username, id: result._id }, secret, {
-      expiresIn: "2h",
-    });
-    res.status(201).send({ result, token });
   } catch (error) {
-    res.status(500).send({ message: "Something went wrong" });
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+// get OTP from phone number
+export const getOTP = async (req, res) => {
+  const { phone, email } = req.body;
+  try {
+    if (!phone) {
+      return res.status(400).send({ success: false, message: "Please enter a phone number" });
+    }
+    if (!email) {
+      return res.status(400).send({ success: false, message: "Please enter an email ID" });
+    }
+
+    const OTP = await util.getOTP();
+    const otpPayload = await model.Otp.create({
+      otp: OTP,
+      phone,
+      email,
+    });
+
+    return res.status(200).send({ data: otpPayload, success: true, message: "OTP sent successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: "Error generating OTP" });
+  }
+};
+
+// verify OTP from phone number
+export const verifyOTP = async (req, res) => {
+  const { phone, otp, email } = req.body;
+  try {
+    const otpPayload = await model.Otp.find({ phone }).sort({ createdAt: -1 }).limit(1);
+    if (otpPayload.length === 0 || otp !== otpPayload[0].otp) {
+      return res.status(400).send({ success: false, message: "OTP is incorrect or has expired" });
+    }
+
+    // save phone number for user model
+    const userExisting = await model.User.findOne({ phone, email });
+    if (!userExisting) {
+      const userPartialPayload = await model.User.create({
+        username: "unauth_user",
+        gender: "Male",
+        phone,
+        email,
+      });
+    }
+
+    return res.status(200).send({ success: true, message: "OTP verified successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: "Error verifying OTP" });
   }
 };
