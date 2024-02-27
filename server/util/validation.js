@@ -8,11 +8,8 @@ export const validatePhoneNumber = (val) => {
 };
 
 export const validateGender = (val) => {
-  if (val === null || val === "") {
-    return false;
-  }
-
-  return val in ["Male", "Female", "Non-Binary"];
+  const genders = ["Male", "Female", "Non-Binary"];
+  return genders.includes(val);
 };
 
 export const validateEmail = (val) => {
