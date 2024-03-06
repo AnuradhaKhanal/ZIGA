@@ -1,9 +1,12 @@
 import { getOTP, verifyOTP, signup } from "./user.controller.js";
-// import messageController from "./message.controller.js";
-
+import { createProfile, updateProfile } from "./profile.controller.js";
+import { getMessage, createMessage } from "./message.controller.js";
 export default {
   getOTP,
   verifyOTP,
   signup,
-  // messageController,
+  createProfile,
+  updateProfile,
+  getMessage,
+  createMessage,
 };
