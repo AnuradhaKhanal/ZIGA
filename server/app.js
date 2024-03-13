@@ -21,6 +21,9 @@ app.get("/", (req, res) => {
 
 // routes
 app.use("/auth", route.userRoute);
+app.use("/profile", route.profileRoute);
+app.use("/chat", route.messageRoute);
+app.use("/project", route.projectRoute);
 
 app.listen(PORT, () => {
   console.log(`App running on: http://localhost:${PORT}`);
