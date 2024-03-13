@@ -1,12 +1,19 @@
 import { getOTP, verifyOTP, signup } from "./user.controller.js";
-import { createProfile, updateProfile } from "./profile.controller.js";
-import { getMessage, createMessage } from "./message.controller.js";
+import { createProfile, updateProfile, getProfile } from "./profile.controller.js";
+import { getChatByUser, createMessage, getMessagesByChatId } from "./message.controller.js";
+import { createProject, updateProject, getProjects } from "./project.controller.js";
+
 export default {
   getOTP,
   verifyOTP,
   signup,
   createProfile,
   updateProfile,
-  getMessage,
+  getProfile,
+  getChatByUser,
   createMessage,
+  getMessagesByChatId,
+  createProject,
+  updateProject,
+  getProjects,
 };
