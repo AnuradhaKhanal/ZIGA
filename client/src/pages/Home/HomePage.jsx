@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -6,23 +6,31 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
+import HomeIcon from "@mui/icons-material/Home";
+import ChatIcon from "@mui/icons-material/Chat";
+import PeopleIcon from "@mui/icons-material/People";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Chat from "../../components/Home/Chat";
+import Profile from "../../components/Home/Profile";
+import Requests from "../../components/Home/Requests";
+import Projects from "../../components/Home/Projects";
 
 const drawerWidth = 240;
 
 const HomePage = (props) => {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [tab, setTab] = useState("Projects");
+  const [selected, setSelected] = useState(0);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -39,26 +47,55 @@ const HomePage = (props) => {
     }
   };
 
+  const handleMenuClick = (tabName, index) => {
+    setTab(tabName);
+    setSelected(index);
+  };
+
   const drawer = (
     <div>
       <Toolbar />
-      <Divider />
       <List>
-        {["Chats", "Requests", "Projects"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
+        {["Projects", "Chats", "Requests"].map((text, index) => (
+          <>
+            {text === "Projects" && (
+              <ListItemButton selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+
+                <ListItemText primary={text} />
+              </ListItemButton>
+            )}
+            {text === "Chats" && (
+              <ListItemButton selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+                <ListItemIcon>
+                  <ChatIcon />
+                </ListItemIcon>
+
+                <ListItemText primary={text} />
+              </ListItemButton>
+            )}
+            {text === "Requests" && (
+              <ListItemButton selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+
+                <ListItemText primary={text} />
+              </ListItemButton>
+            )}
+          </>
         ))}
       </List>
       <Divider />
       <List>
         {["Profile"].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemButton selected={selected === 3} onClick={() => handleMenuClick(text, 3)}>
+              <ListItemIcon>
+                <AccountCircleIcon />
+              </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -74,9 +111,11 @@ const HomePage = (props) => {
       <CssBaseline />
       <AppBar
         position="fixed"
+        color="transparent"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          color: "orange",
         }}
       >
         <Toolbar>
@@ -94,7 +133,7 @@ const HomePage = (props) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }} aria-label="mailbox folders">
+      <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
         <Drawer
           container={container}
           variant="temporary"
@@ -124,7 +163,11 @@ const HomePage = (props) => {
       </Box>
       <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
         <Toolbar />
-        <Typography paragraph>Home page for Ziga</Typography>
+        {/* <Typography paragraph>Home page for Ziga</Typography> */}
+        {tab === "Projects" && <Projects />}
+        {tab === "Chats" && <Chat />}
+        {tab === "Profile" && <Profile />}
+        {tab === "Requests" && <Requests />}
       </Box>
     </Box>
   );
