@@ -1,13 +1,33 @@
-import { Typography, Button, Grid } from "@mui/material";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Typography, Button, Grid } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import API from "../../api";
 
-const FormLocation = ({ onTabChange, onDataChange, data }) => {
+const FormProfileImage = ({ onTabChange, onDataChange, data }) => {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+
+  const handleUploadClick = () => {
+    inputRef.current.click();
+  };
+
   const handleBackButton = () => {
     onTabChange(4);
   };
 
   const handleContinue = () => {
+    console.log({ email: data.email, phone: data.phone, gender: data.gender, username: data.name });
+    API.post("/auth/signup", { email: data.email, phone: data.phone, gender: data.gender, username: data.name })
+      .then((success) => {
+        const { data, status } = success;
+        if (status === 201) {
+          console.log(data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     navigate("/home");
   };
 
@@ -24,7 +44,25 @@ const FormLocation = ({ onTabChange, onDataChange, data }) => {
             Adding photos is a great way to show off more about yourself.
           </Typography>
         </Grid>
-        <Grid item xs={12} md={8} lg={4}></Grid>
+        <Grid item xs={12} md={8} lg={4}>
+          {data.file && (
+            <img alt="upload img" src={data.file} style={{ width: "300px", height: "400px", borderRadius: "30px" }} />
+          )}
+        </Grid>
+        <Grid item xs={12} md={8} lg={4}>
+          <input style={{ display: "none" }} ref={inputRef} type="file" onChange={onDataChange.handleFileChange} />
+        </Grid>
+        <Grid item xs={12} md={8} lg={4}>
+          <Button
+            variant="text"
+            color="primary"
+            sx={{ width: "100%", fontSize: "13px", textTransform: "none", marginTop: "30px" }}
+            onClick={handleUploadClick}
+            startIcon={<CloudUploadIcon />}
+          >
+            Click here to upload
+          </Button>
+        </Grid>
         <Grid item xs={12} md={8} lg={4}>
           <Button
             variant="contained"
@@ -50,4 +88,4 @@ const FormLocation = ({ onTabChange, onDataChange, data }) => {
   );
 };
 
-export default FormLocation;
+export default FormProfileImage;

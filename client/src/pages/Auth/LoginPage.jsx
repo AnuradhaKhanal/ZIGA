@@ -16,6 +16,7 @@ const LoginPage = () => {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("Female");
   const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [file, setFile] = useState(undefined);
 
   const handlePhoneChange = (e) => {
     setPhone(e.target.value);
@@ -49,6 +50,16 @@ const LoginPage = () => {
     setTab(val);
   };
 
+  const handleFileChange = (e) => {
+    const fileObj = e.target.files && e.target.files[0];
+    if (!fileObj) {
+      return;
+    }
+    setFile(URL.createObjectURL(fileObj));
+    // console.log("fileObj is", fileObj);
+    e.target.value = null;
+  };
+
   return (
     <div style={{ padding: 30 }}>
       <Paper elevation={0} sx={{ marginTop: "100px" }}>
@@ -77,7 +88,13 @@ const LoginPage = () => {
         {tab === 4 && (
           <FormLocation onTabChange={handleTabChange} onDataChange={{ handleLocationChange }} data={{ location }} />
         )}
-        {tab === 5 && <FormProfileImage onTabChange={handleTabChange} onDataChange={{}} data={{}} />}
+        {tab === 5 && (
+          <FormProfileImage
+            onTabChange={handleTabChange}
+            onDataChange={{ handleFileChange }}
+            data={{ email, name, gender, phone, file }}
+          />
+        )}
       </Paper>
     </div>
   );
