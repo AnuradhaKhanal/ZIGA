@@ -1,43 +1,108 @@
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import { Grid, Typography, Box, Button, TextField } from "@mui/material";
+import { message } from "../../helpers/Message";
+import Message from "../Message/Message";
+import LoadingScreen from "../Loading/LoadingScreen";
 import API from "../../api";
 
 const FormOTPVerfiy = ({ onTabChange, onDataChange, data }) => {
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const [msg, setMsg] = useState(message);
+  const [isBusy, setIsBusy] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleBackButton = () => {
     onTabChange(0);
   };
 
+  const logout = () => {
+    localStorage.removeItem("profile");
+    navigate("/");
+    setUser(null);
+  };
+
   const handleSendOTP = (e) => {
+    setIsBusy(true);
     API.post("/auth/otp/get", { email: data.email, phone: data.phone })
-      .then((success) => {
-        const { data, status } = success;
-        if (status === 200) {
-          console.log(data);
-        }
+      .then((response) => {
+        const { data } = response;
+        setIsBusy(false);
+        setMsg({ showMsg: true, success: data.success, text: data.message });
+        console.log(data);
       })
       .catch((error) => {
-        console.log(error);
+        const { data } = error.response;
+        setIsBusy(false);
+        setMsg({ showMsg: true, success: data.success, text: data.message });
       });
     onDataChange.clearOtp();
   };
 
-  const handleContinue = (e) => {
-    API.post("/auth/otp/verify", { email: data.email, phone: data.phone, otp: data.otp })
-      .then((success) => {
-        const { data, status } = success;
+  const handleLogin = () => {
+    setIsBusy(true);
+    API.post("/auth/signin", { email: data.email, phone: data.phone })
+      .then((response) => {
+        const { data, status } = response;
         if (status === 200) {
-          console.log(data);
+          localStorage.setItem("profile", JSON.stringify(data));
+          setIsBusy(false);
+          setMsg({ showMsg: true, success: data.success, text: data.message });
+          navigate("/home");
         }
       })
       .catch((error) => {
-        console.log(error);
+        const { data } = error.response;
+        setIsBusy(false);
+        setMsg({ showMsg: true, success: data.success, text: data.message });
       });
-    onDataChange.clearOtp();
-    onTabChange(2);
   };
+
+  const handleContinue = (e) => {
+    setIsBusy(true);
+    let isLogin = location.pathname === "/login";
+
+    API.post("/auth/otp/verify", { email: data.email, phone: data.phone, otp: data.otp, isLogin })
+      .then((success) => {
+        const { data } = success;
+        setIsBusy(false);
+        setMsg({ showMsg: true, success: data.success, text: data.message });
+
+        // In case of login operation
+        if (isLogin) {
+          handleLogin();
+        } else {
+          onTabChange(2);
+        }
+      })
+      .catch((error) => {
+        const { data } = error.response;
+        setIsBusy(false);
+        setMsg({ showMsg: true, success: data.success, text: data.message });
+      });
+
+    onDataChange.clearOtp();
+  };
+
+  useEffect(() => {
+    const token = user?.token;
+    if (token) {
+      const decodedToken = jwtDecode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
+    setUser(JSON.parse(localStorage.getItem("profile")));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   return (
     <>
       <Grid container spacing={2} direction={"column"} justifyContent={"center"} alignItems={"center"}>
+        <Message data={msg} onChangeData={{ setMsg }} />
+        <LoadingScreen data={{ isBusy }} onChangeData={{ setIsBusy }} />
         <Grid item xs={12} md={8} lg={4}>
           <Typography variant="h6" sx={{ opacity: "0.8", marginTop: "30px" }}>
             Get your account verified before starting in

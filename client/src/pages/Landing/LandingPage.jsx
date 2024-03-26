@@ -8,6 +8,10 @@ const LandingPage = () => {
   const navigateToLogin = () => {
     navigate("/login");
   };
+
+  const navigateToRegister = () => {
+    navigate("/join");
+  };
   return (
     <Box
       sx={{
@@ -33,14 +37,32 @@ const LandingPage = () => {
             co-founders. Build your network, connect with investors and explain the business to others to see how they
             can help out.
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ width: "150px", fontSize: "16px", borderRadius: "15px", padding: "5px", textTransform: "none" }}
-            onClick={navigateToLogin}
-          >
-            Get Started
-          </Button>
+          <Grid container direction="row">
+            <Button
+              variant="contained"
+              color="warning"
+              sx={{
+                width: "150px",
+                fontSize: "16px",
+                borderRadius: "8px",
+                padding: "5px",
+                textTransform: "none",
+                marginRight: "10px",
+              }}
+              onClick={navigateToRegister}
+            >
+              Join
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{ width: "150px", fontSize: "16px", borderRadius: "8px", padding: "5px", textTransform: "none" }}
+              onClick={navigateToLogin}
+            >
+              Login
+            </Button>
+          </Grid>
         </Grid>
         <Grid item xs={12} md={5}>
           <img src={pgimage} alt="Ziga" style={{ width: "110%" }} />
