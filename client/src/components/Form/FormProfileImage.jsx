@@ -1,11 +1,19 @@
-import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import { Typography, Button, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { message } from "../../helpers/Message";
+import Message from "../Message/Message";
+import LoadingScreen from "../Loading/LoadingScreen";
 import API from "../../api";
 
 const FormProfileImage = ({ onTabChange, onDataChange, data }) => {
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const [msg, setMsg] = useState(message);
+  const [isBusy, setIsBusy] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const inputRef = useRef(null);
 
   const handleUploadClick = () => {
@@ -16,24 +24,47 @@ const FormProfileImage = ({ onTabChange, onDataChange, data }) => {
     onTabChange(4);
   };
 
+  const logout = () => {
+    localStorage.removeItem("profile");
+    navigate("/");
+    setUser(null);
+  };
+
   const handleContinue = () => {
-    console.log({ email: data.email, phone: data.phone, gender: data.gender, username: data.name });
-    API.post("/auth/signup", { email: data.email, phone: data.phone, gender: data.gender, username: data.name })
-      .then((success) => {
-        const { data, status } = success;
+    setIsBusy(true);
+    API.post("/auth/signup", { email: data.email, phone: data.phone, gender: data.gender, name: data.name })
+      .then((response) => {
+        const { data, status } = response;
         if (status === 201) {
-          console.log(data);
+          localStorage.setItem("profile", JSON.stringify(data));
+          setIsBusy(false);
+          setMsg({ showMsg: true, success: data.success, text: data.message });
+          navigate("/home");
         }
       })
       .catch((error) => {
-        console.log(error);
+        const { data } = error.response;
+        setIsBusy(false);
+        setMsg({ showMsg: true, success: data.success, text: data.message });
       });
-    navigate("/home");
   };
+
+  useEffect(() => {
+    const token = user?.token;
+    if (token) {
+      const decodedToken = jwtDecode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
+    setUser(JSON.parse(localStorage.getItem("profile")));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   return (
     <>
       <Grid container spacing={2} direction={"column"} justifyContent={"center"} alignItems={"center"}>
+        <Message data={msg} onChangeData={{ setMsg }} />
+        <LoadingScreen data={{ isBusy }} onChangeData={{ setIsBusy }} />
         <Grid item xs={12} md={8} lg={4}>
           <Typography variant="h6" sx={{ opacity: "0.8", marginTop: "30px" }}>
             Now it's time to upload some photos

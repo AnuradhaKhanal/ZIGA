@@ -6,6 +6,7 @@ import FormName from "../../components/Form/FormName";
 import FormGenderOptions from "../../components/Form/FormGenderOptions";
 import FormLocation from "../../components/Form/FormLocation";
 import FormProfileImage from "../../components/Form/FormProfileImage";
+import FormProfile from "../../components/Form/FormProfile";
 // import logo from "../../assets/images/logoNB.png";
 
 const LoginPage = () => {
@@ -56,7 +57,6 @@ const LoginPage = () => {
       return;
     }
     setFile(URL.createObjectURL(fileObj));
-    // console.log("fileObj is", fileObj);
     e.target.value = null;
   };
 
@@ -73,6 +73,7 @@ const LoginPage = () => {
             </Typography>
           </Grid>
         </Grid>
+
         {tab === 0 && <FormLoginOptions onTabChange={handleTabChange} />}
         {tab === 1 && (
           <FormOTPVerfiy
@@ -90,6 +91,13 @@ const LoginPage = () => {
         )}
         {tab === 5 && (
           <FormProfileImage
+            onTabChange={handleTabChange}
+            onDataChange={{ handleFileChange }}
+            data={{ email, name, gender, phone, file }}
+          />
+        )}
+        {tab === 6 && (
+          <FormProfile
             onTabChange={handleTabChange}
             onDataChange={{ handleFileChange }}
             data={{ email, name, gender, phone, file }}
