@@ -32,14 +32,15 @@ const FormProfileImage = ({ onTabChange, onDataChange, data }) => {
 
   const handleContinue = () => {
     setIsBusy(true);
-    API.post("/auth/signup", { email: data.email, phone: data.phone, gender: data.gender, name: data.name })
+    API.post("/auth/signup", { email: data.email, phone: data.phone, gender: data.gender, username: data.name })
       .then((response) => {
         const { data, status } = response;
         if (status === 201) {
+          console.log(data);
           localStorage.setItem("profile", JSON.stringify(data));
           setIsBusy(false);
           setMsg({ showMsg: true, success: data.success, text: data.message });
-          navigate("/home");
+          onTabChange(6);
         }
       })
       .catch((error) => {

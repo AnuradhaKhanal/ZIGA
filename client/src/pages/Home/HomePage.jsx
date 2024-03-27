@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import ChatIcon from "@mui/icons-material/Chat";
-import PeopleIcon from "@mui/icons-material/People";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Divider,
+  Typography,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  Home as HomeIcon,
+  Chat as ChatIcon,
+  People as PeopleIcon,
+  AccountCircle as AccountCircleIcon,
+} from "@mui/icons-material";
+
 import Chat from "../../components/Home/Chat";
 import Profile from "../../components/Home/Profile";
 import Requests from "../../components/Home/Requests";
@@ -27,10 +34,20 @@ const drawerWidth = 240;
 
 const HomePage = (props) => {
   const { window } = props;
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [tab, setTab] = useState("Projects");
   const [selected, setSelected] = useState(0);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const logout = () => {
+    localStorage.removeItem("profile");
+    navigate("/");
+    setUser(null);
+  };
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -51,6 +68,17 @@ const HomePage = (props) => {
     setTab(tabName);
     setSelected(index);
   };
+
+  useEffect(() => {
+    const token = user?.token;
+    if (token) {
+      const decodedToken = jwtDecode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
+    setUser(JSON.parse(localStorage.getItem("profile")));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   const drawer = (
     <div>

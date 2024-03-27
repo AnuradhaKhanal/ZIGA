@@ -96,13 +96,7 @@ const LoginPage = () => {
             data={{ email, name, gender, phone, file }}
           />
         )}
-        {tab === 6 && (
-          <FormProfile
-            onTabChange={handleTabChange}
-            onDataChange={{ handleFileChange }}
-            data={{ email, name, gender, phone, file }}
-          />
-        )}
+        {tab === 6 && <FormProfile />}
       </Paper>
     </div>
   );

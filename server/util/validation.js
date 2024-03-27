@@ -21,3 +21,30 @@ export const validateEmail = (val) => {
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return pattern.test(val);
 };
+
+export const validateStartupType = (val) => {
+  if (val === null || val === "") {
+    return false;
+  }
+
+  const options = ["0", "1", "2"];
+  return options.includes(val);
+};
+
+export const validateStartTime = (val) => {
+  if (val === null || val === "") {
+    return false;
+  }
+
+  const options = ["0", "1", "2", "3"];
+  return options.includes(val);
+};
+
+export const validateWorkarea = (val) => {
+  if (val === null || val === "") {
+    return false;
+  }
+
+  const options = ["Product", "Engineering", "Design", "Sales and Marketing", "Operations"];
+  return options.includes(val);
+};

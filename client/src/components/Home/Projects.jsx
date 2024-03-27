@@ -6,6 +6,7 @@ const Projects = () => {
   const { data } = useDemoData({
     dataSet: "Employee",
     rowLength: 100,
+    editable: true,
     maxColumns: 6,
   });
 

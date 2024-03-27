@@ -1,12 +1,10 @@
-import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
-import { Grid } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import Badge from "@mui/material/Badge";
-import Button from "@mui/material/Button";
+import { PhotoCamera as PhotoCameraIcon } from "@mui/icons-material";
+import { Button, Badge, Avatar, Grid, Typography, Card } from "@mui/material";
 
 const Profile = () => {
+  const user = JSON.parse(localStorage.getItem("profile"));
+  const { phone, email, username, gender } = user?.data?.userPayload;
+
   return (
     <Card variant="outlined">
       <Grid container direction="column" justifyContent="center" alignItems="center">
@@ -28,13 +26,16 @@ const Profile = () => {
             }
           >
             <Avatar
-              sx={{ width: 100, height: 100, mb: 1.5 }}
-              src="https://material-ui.com/static/images/avatar/1.jpg"
-            ></Avatar>
+              sx={{ width: 100, height: 100, mb: 1.5, backgroundColor: "#2596be" }}
+              alt="profile_pic"
+              // src="https://material-ui.com/static/images/avatar/1.jpg"
+            >
+              {username?.charAt(0).toUpperCase()}
+            </Avatar>
           </Badge>
 
-          <Typography variant="h6">John Henderson</Typography>
-          <Typography color="text.secondary">UI developer</Typography>
+          <Typography variant="h6">{username}</Typography>
+          <Typography color="text.secondary">Ziga User</Typography>
         </Grid>
 
         <Grid container>
@@ -45,7 +46,7 @@ const Profile = () => {
                 borderTop: "1px solid #e1e1e1",
               }}
             >
-              Age
+              Name
             </Typography>
             <Typography
               style={{
@@ -53,7 +54,15 @@ const Profile = () => {
                 borderTop: "1px solid #e1e1e1",
               }}
             >
-              Experience
+              Sex
+            </Typography>
+            <Typography
+              style={{
+                padding: "1rem",
+                borderTop: "1px solid #e1e1e1",
+              }}
+            >
+              Contact number
             </Typography>
             <Typography
               style={{
@@ -64,36 +73,47 @@ const Profile = () => {
               Email
             </Typography>
           </Grid>
-          {/* VALUES */}
-          <Grid item xs={6} sx={{ textAlign: "end" }}>
+          <Grid item xs={6} sx={{ textAlign: "start" }}>
             <Typography
               style={{
                 padding: "1rem",
                 borderTop: "1px solid #e1e1e1",
+                color: "grey",
               }}
             >
-              32
+              {username}
             </Typography>
             <Typography
               style={{
                 padding: "1rem",
                 borderTop: "1px solid #e1e1e1",
+                color: "grey",
               }}
             >
-              7 years
+              {gender}
             </Typography>
             <Typography
               style={{
                 padding: "1rem",
                 borderTop: "1px solid #e1e1e1",
+                color: "grey",
               }}
             >
-              john.ui123@gmail.com
+              {phone}
+            </Typography>
+            <Typography
+              style={{
+                padding: "1rem",
+                borderTop: "1px solid #e1e1e1",
+                color: "grey",
+              }}
+            >
+              {email}
             </Typography>
           </Grid>
         </Grid>
 
-        <Grid
+        {/* <Grid
           item
           style={{
             padding: "1rem",
@@ -102,9 +122,9 @@ const Profile = () => {
           sx={{ width: "100%" }}
         >
           <Button variant="contained" color="secondary" sx={{ width: "99%", p: 1, my: 2 }}>
-            View Public Profile
+            Edit Profile
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Card>
   );
