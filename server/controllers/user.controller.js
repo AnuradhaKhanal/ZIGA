@@ -123,7 +123,28 @@ export const verifyOTP = async (req, res) => {
 
     return res.status(200).send({ success: true, message: "OTP verified successfully" });
   } catch (error) {
-    console.log(error.message);
     return res.status(500).send({ success: false, message: "Error verifying OTP" });
+  }
+};
+
+// get all users
+export const getUsers = async (req, res) => {
+  const { email } = req.params;
+  try {
+    const usersList = await model.User.find({ email: { $ne: email } });
+    return res.status(200).send({ data: usersList, success: true, message: "user list loaded" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: "Error getting users" });
+  }
+};
+
+// get user by id
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await model.User.findById({ _id: id });
+    return res.status(200).send({ data: user, success: true, message: "user info loaded" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: "Error getting user" });
   }
 };

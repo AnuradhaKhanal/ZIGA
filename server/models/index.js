@@ -4,6 +4,7 @@ import Message from "./message.model.js";
 import Chat from "./chat.model.js";
 import Otp from "./otp.model.js";
 import Project from "./project.model.js";
+import Request from "./request.model.js";
 
 export default {
   User,
@@ -12,4 +13,5 @@ export default {
   Chat,
   Otp,
   Project,
+  Request,
 };

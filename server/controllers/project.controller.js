@@ -3,7 +3,7 @@ import model from "../models/index.js";
 export const getProjects = async (req, res) => {
   try {
     const projectPayload = await model.Project.find().sort({ likes: -1 });
-    return res.status(200).send({ data: projectPayload, success: true, message: "Projects fetched successfully" });
+    return res.status(200).send({ data: projectPayload, success: true, message: "Projects loaded successfully" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -15,6 +15,9 @@ export const createProject = async (req, res) => {
     const user = await model.User.findOne({ email, phone });
     if (!user) {
       return res.status(400).send({ success: false, message: "User does not exist" });
+    }
+    if (!designation || !summary || !reason || !price) {
+      return res.status(400).send({ success: false, message: "Please fill all the required fields" });
     }
     const projectPayload = await model.Project.create({
       user: user._id,
