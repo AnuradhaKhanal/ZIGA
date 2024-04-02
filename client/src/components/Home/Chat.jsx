@@ -19,9 +19,7 @@ const Chat = () => {
     <div>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="h5" className="header-message">
-            Chat
-          </Typography>
+          <Typography variant="h5">Chat</Typography>
         </Grid>
       </Grid>
       <Grid
@@ -70,7 +68,7 @@ const Chat = () => {
         </Grid>
         <Grid item xs={9}>
           <List
-            className={{
+            sx={{
               height: "70vh",
               overflowY: "auto",
             }}
