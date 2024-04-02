@@ -1,5 +1,5 @@
 import { PhotoCamera as PhotoCameraIcon } from "@mui/icons-material";
-import { Button, Badge, Avatar, Grid, Typography, Card } from "@mui/material";
+import { Badge, Avatar, Grid, Typography, Card } from "@mui/material";
 
 const Profile = () => {
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -54,7 +54,7 @@ const Profile = () => {
                 borderTop: "1px solid #e1e1e1",
               }}
             >
-              Sex
+              Gender
             </Typography>
             <Typography
               style={{

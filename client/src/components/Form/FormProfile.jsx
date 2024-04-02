@@ -115,7 +115,7 @@ const FormProfile = () => {
   };
 
   useEffect(() => {
-    const token = user?.token;
+    const token = user?.data?.token;
     if (token) {
       const decodedToken = jwtDecode(token);
 

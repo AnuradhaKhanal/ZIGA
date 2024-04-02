@@ -22,13 +22,15 @@ import {
   Home as HomeIcon,
   Chat as ChatIcon,
   People as PeopleIcon,
+  ShoppingBag as ShoppingBagIcon,
   AccountCircle as AccountCircleIcon,
 } from "@mui/icons-material";
 
 import Chat from "../../components/Home/Chat";
 import Profile from "../../components/Home/Profile";
-import Requests from "../../components/Home/Requests";
+import Subscription from "../../components/Home/Subscription";
 import Projects from "../../components/Home/Projects";
+import Connections from "../../components/Home/Connections";
 
 const drawerWidth = 240;
 
@@ -70,7 +72,7 @@ const HomePage = (props) => {
   };
 
   useEffect(() => {
-    const token = user?.token;
+    const token = user?.data?.token;
     if (token) {
       const decodedToken = jwtDecode(token);
 
@@ -84,10 +86,10 @@ const HomePage = (props) => {
     <div>
       <Toolbar />
       <List>
-        {["Projects", "Chats", "Requests"].map((text, index) => (
+        {["Projects", "Chats", "Connections", "Premium"].map((text, index) => (
           <>
             {text === "Projects" && (
-              <ListItemButton selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+              <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
@@ -96,7 +98,7 @@ const HomePage = (props) => {
               </ListItemButton>
             )}
             {text === "Chats" && (
-              <ListItemButton selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+              <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
                 <ListItemIcon>
                   <ChatIcon />
                 </ListItemIcon>
@@ -104,8 +106,17 @@ const HomePage = (props) => {
                 <ListItemText primary={text} />
               </ListItemButton>
             )}
-            {text === "Requests" && (
-              <ListItemButton selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+            {text === "Premium" && (
+              <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+                <ListItemIcon>
+                  <ShoppingBagIcon />
+                </ListItemIcon>
+
+                <ListItemText primary={text} />
+              </ListItemButton>
+            )}
+            {text === "Connections" && (
+              <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
@@ -119,8 +130,8 @@ const HomePage = (props) => {
       <Divider />
       <List>
         {["Profile"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton selected={selected === 3} onClick={() => handleMenuClick(text, 3)}>
+          <ListItem key={index} disablePadding>
+            <ListItemButton selected={selected === 4} onClick={() => handleMenuClick(text, 3)}>
               <ListItemIcon>
                 <AccountCircleIcon />
               </ListItemIcon>
@@ -139,7 +150,7 @@ const HomePage = (props) => {
       <CssBaseline />
       <AppBar
         position="fixed"
-        color="transparent"
+        color="default"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
@@ -157,7 +168,7 @@ const HomePage = (props) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Ziga - Home
+            {`${tab}`}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -191,11 +202,11 @@ const HomePage = (props) => {
       </Box>
       <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
         <Toolbar />
-        {/* <Typography paragraph>Home page for Ziga</Typography> */}
         {tab === "Projects" && <Projects />}
         {tab === "Chats" && <Chat />}
         {tab === "Profile" && <Profile />}
-        {tab === "Requests" && <Requests />}
+        {tab === "Premium" && <Subscription />}
+        {tab === "Connections" && <Connections />}
       </Box>
     </Box>
   );
