@@ -1,5 +1,5 @@
 import React from "react";
-import "./SubStyling.css";
+// import "./SubStyling.css";
 
 const Subscription = () => {
   return (

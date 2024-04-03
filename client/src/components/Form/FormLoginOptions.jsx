@@ -23,8 +23,7 @@ const FormLoginOptions = ({ onTabChange }) => {
               text="Continue with Google"
               shape="pill"
               onSuccess={(credentialResponse) => {
-                // console.log(credentialResponse);
-                navigate("/home");
+                console.log("Google login not supported");
               }}
               onError={() => {
                 console.log("Login Failed");
