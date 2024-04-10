@@ -1,8 +1,20 @@
 import { getOTP, verifyOTP, signup, signin, getUsers, getUserById } from "./user.controller.js";
 import { createProfile, updateProfile, getProfile } from "./profile.controller.js";
-import { getChatByUser, createMessage, getMessagesByChatId } from "./message.controller.js";
+import {
+  getChatByUser,
+  createMessage,
+  getMessagesByChatId,
+  getApprovedUsers,
+  getMessagesBySenderAndReceiver,
+} from "./message.controller.js";
 import { createProject, updateProject, getProjects } from "./project.controller.js";
-import { sendRequest, getRequests, deleteRequest } from "./request.controller.js";
+import {
+  sendRequest,
+  getPendingRequests,
+  getApprovedRequests,
+  deleteRequest,
+  approveRequest,
+} from "./request.controller.js";
 
 export default {
   getOTP,
@@ -15,11 +27,15 @@ export default {
   getChatByUser,
   createMessage,
   getMessagesByChatId,
+  getApprovedUsers,
+  getMessagesBySenderAndReceiver,
   createProject,
   updateProject,
   getProjects,
   sendRequest,
-  getRequests,
+  getPendingRequests,
+  getApprovedRequests,
+  approveRequest,
   getUsers,
   getUserById,
   deleteRequest,

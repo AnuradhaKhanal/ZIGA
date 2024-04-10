@@ -20,6 +20,8 @@ const Connections = () => {
   const [msg, setMsg] = useState(message);
   const [isBusy, setIsBusy] = useState(false);
   const [open, setOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem("profile"));
+  const { _id } = user?.data?.userPayload;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -59,7 +61,7 @@ const Connections = () => {
   const loadConnections = useCallback(() => {
     setIsBusy(true);
     const res = [];
-    API.get("/request/view")
+    API.get(`/request/view/approved/${_id}`)
       .then((response) => {
         const { data } = response;
         setMsg({ showMsg: true, success: data.success, text: data.message });
@@ -92,7 +94,7 @@ const Connections = () => {
         setMsg({ showMsg: true, success: data.success, text: data.message });
       });
     setIsBusy(false);
-  }, []);
+  }, [_id]);
 
   useEffect(() => {
     loadConnections();
@@ -121,7 +123,7 @@ const Connections = () => {
             <Card
               variant="elevation"
               key={index}
-              sx={{ mb: "25px", ml: "110px", mr: "110px", backgroundColor: "aliceblue" }}
+              sx={{ mb: "25px", ml: "220px", mr: "220px", backgroundColor: "aliceblue" }}
             >
               <Grid container>
                 <Grid item xs={6}>
@@ -186,7 +188,7 @@ const Connections = () => {
                     sx={{ width: "10%", fontSize: "13px", textTransform: "none", borderRadius: "10px" }}
                     onClick={() => handleDelete(conn.id)}
                   >
-                    Delete
+                    Unfollow
                   </Button>
                 </Grid>
               </Grid>
@@ -196,12 +198,19 @@ const Connections = () => {
       <FormConnectionDialog open={open} onClose={handleClose} onRefresh={handleRefresh} />
       <Fab
         variant="extended"
-        color="success"
+        // color="success"
         onClick={handleClickOpen}
-        sx={{ position: "fixed", bottom: 16, right: 16, textTransform: "none" }}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+          textTransform: "none",
+          color: "white",
+          background: "linear-gradient(to right bottom, #243949, #513fa4)",
+        }}
       >
-        <AddIcon />
-        Create
+        <AddIcon sx={{ color: "white" }} />
+        Connect
       </Fab>
     </>
   );

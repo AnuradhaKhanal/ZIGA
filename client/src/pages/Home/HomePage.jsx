@@ -24,6 +24,7 @@ import {
   People as PeopleIcon,
   ShoppingBag as ShoppingBagIcon,
   AccountCircle as AccountCircleIcon,
+  HourglassBottom as HourglassBottomIcon,
 } from "@mui/icons-material";
 
 import Chat from "../../components/Home/Chat";
@@ -31,6 +32,7 @@ import Profile from "../../components/Home/Profile";
 import Subscription from "../../components/Home/Subscription";
 import Projects from "../../components/Home/Projects";
 import Connections from "../../components/Home/Connections";
+import PendingRequests from "../../components/Home/PendingRequests";
 
 const drawerWidth = 240;
 
@@ -39,7 +41,7 @@ const HomePage = (props) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [tab, setTab] = useState("Projects");
+  const [tab, setTab] = useState("Home");
   const [selected, setSelected] = useState(0);
 
   const navigate = useNavigate();
@@ -86,42 +88,51 @@ const HomePage = (props) => {
     <div>
       <Toolbar />
       <List>
-        {["Projects", "Chats", "Connections", "Premium"].map((text, index) => (
+        {["Home", "Chats", "Requests", "Connections", "Premium"].map((text, index) => (
           <>
-            {text === "Projects" && (
+            {text === "Home" && (
               <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
                 <ListItemIcon>
-                  <HomeIcon />
+                  <HomeIcon sx={{ color: "aliceblue" }} />
                 </ListItemIcon>
 
-                <ListItemText primary={text} />
+                <ListItemText primary={text} sx={{ color: "silver" }} />
               </ListItemButton>
             )}
             {text === "Chats" && (
               <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
                 <ListItemIcon>
-                  <ChatIcon />
+                  <ChatIcon sx={{ color: "aliceblue" }} />
                 </ListItemIcon>
 
-                <ListItemText primary={text} />
+                <ListItemText primary={text} sx={{ color: "silver" }} />
               </ListItemButton>
             )}
             {text === "Premium" && (
               <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
                 <ListItemIcon>
-                  <ShoppingBagIcon />
+                  <ShoppingBagIcon sx={{ color: "aliceblue" }} />
                 </ListItemIcon>
 
-                <ListItemText primary={text} />
+                <ListItemText primary={text} sx={{ color: "silver" }} />
               </ListItemButton>
             )}
             {text === "Connections" && (
               <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
                 <ListItemIcon>
-                  <PeopleIcon />
+                  <PeopleIcon sx={{ color: "aliceblue" }} />
                 </ListItemIcon>
 
-                <ListItemText primary={text} />
+                <ListItemText primary={text} sx={{ color: "silver" }} />
+              </ListItemButton>
+            )}
+            {text === "Requests" && (
+              <ListItemButton key={index} selected={selected === index} onClick={() => handleMenuClick(text, index)}>
+                <ListItemIcon>
+                  <HourglassBottomIcon sx={{ color: "aliceblue" }} />
+                </ListItemIcon>
+
+                <ListItemText primary={text} sx={{ color: "silver" }} />
               </ListItemButton>
             )}
           </>
@@ -131,11 +142,11 @@ const HomePage = (props) => {
       <List>
         {["Profile"].map((text, index) => (
           <ListItem key={index} disablePadding>
-            <ListItemButton selected={selected === 4} onClick={() => handleMenuClick(text, 3)}>
+            <ListItemButton selected={selected === 5} onClick={() => handleMenuClick(text, 5)}>
               <ListItemIcon>
-                <AccountCircleIcon />
+                <AccountCircleIcon sx={{ color: "aliceblue" }} />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={text} sx={{ color: "silver" }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -154,7 +165,8 @@ const HomePage = (props) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          color: "orange",
+          color: "#243949",
+          // background: "linear-gradient(to right top, #243949, #513fa4)",
         }}
       >
         <Toolbar>
@@ -184,7 +196,11 @@ const HomePage = (props) => {
           }}
           sx={{
             display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              background: "linear-gradient(to left top, #243949, #513fa4)",
+            },
           }}
         >
           {drawer}
@@ -193,20 +209,28 @@ const HomePage = (props) => {
           variant="permanent"
           sx={{
             display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              background: "linear-gradient(to bottom, #243949, #513fa4)",
+            },
           }}
           open
         >
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+      <Box
+        component="main"
+        sx={{ backgroundColor: "#dedaf1", flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+      >
         <Toolbar />
-        {tab === "Projects" && <Projects />}
+        {tab === "Home" && <Projects />}
         {tab === "Chats" && <Chat />}
         {tab === "Profile" && <Profile />}
         {tab === "Premium" && <Subscription />}
         {tab === "Connections" && <Connections />}
+        {tab === "Requests" && <PendingRequests />}
       </Box>
     </Box>
   );

@@ -6,7 +6,7 @@ const Profile = () => {
   const { phone, email, username, gender } = user?.data?.userPayload;
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ ml: "230px", mr: "230px" }}>
       <Grid container direction="column" justifyContent="center" alignItems="center">
         <Grid item sx={{ p: "1.5rem 0rem", textAlign: "center" }}>
           <Badge

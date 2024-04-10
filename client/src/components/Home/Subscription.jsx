@@ -1,5 +1,5 @@
 import React from "react";
-// import "./SubStyling.css";
+import "./SubStyling.css";
 
 const Subscription = () => {
   return (
@@ -47,7 +47,9 @@ const Subscription = () => {
             <strong>24/7</strong> support
           </li>
         </ul>
-        <button class="cta-btn">SELECT</button>
+        <a href="https://payment.page/demo/" target="_blank" rel="noreferrer">
+          <button class="cta-btn">SELECT</button>
+        </a>
       </div>
       <div class="pricing-card standard">
         <div class="heading">
@@ -92,7 +94,9 @@ const Subscription = () => {
             <strong>24/7</strong> support
           </li>
         </ul>
-        <button class="cta-btn">SELECT</button>
+        <a href="https://payment.page/demo/" target="_blank" rel="noreferrer">
+          <button class="cta-btn">SELECT</button>
+        </a>
       </div>
       <div class="pricing-card premium">
         <div class="heading">
@@ -141,7 +145,9 @@ const Subscription = () => {
             <strong>Advanced</strong> security features
           </li>
         </ul>
-        <button class="cta-btn">SELECT</button>
+        <a href="https://payment.page/demo/" target="_blank" rel="noreferrer">
+          <button class="cta-btn">SELECT</button>
+        </a>
       </div>
     </section>
   );

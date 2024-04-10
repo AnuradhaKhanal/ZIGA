@@ -37,6 +37,13 @@ const LandingPage = () => {
             co-founders. Build your network, connect with investors and explain the business to others to see how they
             can help out.
           </Typography>
+
+          <Typography variant="h5" sx={{ opacity: "0.7" }}>
+            Make the first move
+          </Typography>
+          <Typography variant="caption" sx={{ opacity: "0.4" }}>
+            Start meeting entrepreneurs and founders in your area.
+          </Typography>
           <Grid container direction="row">
             <Button
               variant="contained"
@@ -48,6 +55,7 @@ const LandingPage = () => {
                 padding: "5px",
                 textTransform: "none",
                 marginRight: "10px",
+                marginTop: "20px",
               }}
               onClick={navigateToRegister}
             >
@@ -57,7 +65,14 @@ const LandingPage = () => {
             <Button
               variant="outlined"
               color="primary"
-              sx={{ width: "150px", fontSize: "16px", borderRadius: "8px", padding: "5px", textTransform: "none" }}
+              sx={{
+                width: "150px",
+                fontSize: "16px",
+                borderRadius: "8px",
+                padding: "5px",
+                textTransform: "none",
+                marginTop: "20px",
+              }}
               onClick={navigateToLogin}
             >
               Login

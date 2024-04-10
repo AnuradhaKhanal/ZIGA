@@ -1,9 +1,26 @@
 import model from "../models/index.js";
 
-export const getRequests = async (req, res) => {
+export const getApprovedRequests = async (req, res) => {
+  const { user_id } = req.params;
   try {
-    const requestPayload = await model.Request.find().sort({ createdAt: -1 });
-    return res.status(200).send({ data: requestPayload, success: true, message: "Requests pending!" });
+    const requestPayload = await model.Request.find({
+      $or: [
+        { isApproved: true, createdBy: user_id },
+        { isApproved: true, createdFor: user_id },
+      ],
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).send({ data: requestPayload, success: true, message: "Loading your connections..." });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+export const getPendingRequests = async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const requestPayload = await model.Request.find({ isApproved: false, createdFor: user_id }).sort({ createdAt: -1 });
+    return res.status(200).send({ data: requestPayload, success: true, message: "Loading pending requests..." });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -46,6 +63,29 @@ export const sendRequest = async (req, res) => {
       purpose,
     });
     return res.status(201).send({ data: requestPayload, success: true, message: "Connection request sent" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+export const approveRequest = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedRequest = await model.Request.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        isApproved: true,
+      },
+      { new: true }
+    );
+
+    if (!updatedRequest) {
+      return res.status(400).send({ success: false, message: "Failed to approve request" });
+    }
+
+    return res.status(201).send({ data: updatedRequest, success: true, message: "Connection request approved" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

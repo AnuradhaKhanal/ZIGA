@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const projectSchema = mongoose.Schema({
   id: { type: String },
   user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+  username: { type: String, required: true, trim: true },
+  email: { type: String, required: true, unique: true, trim: true },
   designation: { type: String, required: true, trim: true },
   summary: { type: String, required: true, trim: true },
   reason: { type: String, required: true, trim: true },

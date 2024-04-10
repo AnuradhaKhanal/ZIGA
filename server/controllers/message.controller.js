@@ -1,5 +1,4 @@
 import model from "../models/index.js";
-import util from "../util/index.js";
 
 export const createMessage = async (req, res) => {
   const { sender, receiver, body } = req.body;
@@ -24,7 +23,41 @@ export const createMessage = async (req, res) => {
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
 
-    return res.status(201).send({ data: chatPayload, success: true, message: "Message creation successful" });
+    return res.status(201).send({ data: chatPayload, success: true, message: "Message sent" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+export const getApprovedUsers = async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const requestPayload = await model.Request.find({
+      $or: [
+        { isApproved: true, createdBy: user_id },
+        { isApproved: true, createdFor: user_id },
+      ],
+    }).sort({ createdAt: -1 });
+
+    const userIds = new Set();
+
+    requestPayload.map(async (req) => {
+      if (req.createdBy !== user_id) {
+        userIds.add(req.createdBy);
+      } else if (req.createdFor !== user_id) {
+        userIds.add(req.createdFor);
+      }
+    });
+
+    const usersPayload = [];
+
+    await Promise.all(
+      Array.from(userIds).map(async (id) => {
+        const userObj = await model.User.findById({ _id: id });
+        usersPayload.push(userObj);
+      })
+    );
+    return res.status(200).send({ data: usersPayload, success: true, message: "Loading your connections..." });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -35,7 +68,7 @@ export const getChatByUser = async (req, res) => {
   try {
     const chatPayload = await model.Chat.find({ person1: sender, person2: receiver });
 
-    return res.status(200).send({ data: chatPayload, success: true, message: "Fetching messages successful" });
+    return res.status(200).send({ data: chatPayload, success: true, message: "Loading all messages..." });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -57,10 +90,28 @@ export const getMessagesByChatId = async (req, res) => {
         })
       );
 
-      return res.status(200).send({ data: msgPayload, success: true, message: "Fetching messages successful" });
+      return res.status(200).send({ data: msgPayload, success: true, message: "Loading your messages" });
     } else {
-      return res.status(404).send({ success: false, message: "Could not fetch messages" });
+      return res.status(404).send({ success: false, message: "Error loading chat" });
     }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+export const getMessagesBySenderAndReceiver = async (req, res) => {
+  const { sender, receiver } = req.body;
+  try {
+    const msgPayload = await model.Message.find({
+      $or: [
+        { sender: sender, receiver: receiver },
+        { receiver: sender, sender: receiver },
+      ],
+    })
+      .sort({ createdAt: 1 })
+      .limit(50);
+
+    return res.status(200).send({ data: msgPayload, success: true, message: "Loading your messages" });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

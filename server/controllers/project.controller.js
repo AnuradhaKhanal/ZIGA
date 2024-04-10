@@ -21,6 +21,8 @@ export const createProject = async (req, res) => {
     }
     const projectPayload = await model.Project.create({
       user: user._id,
+      email,
+      username: user.username,
       designation,
       summary,
       reason,
