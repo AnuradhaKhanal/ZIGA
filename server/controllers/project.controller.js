@@ -1,9 +1,60 @@
 import model from "../models/index.js";
 
 export const getProjects = async (req, res) => {
+  const { user_id } = req.params;
   try {
     const projectPayload = await model.Project.find().sort({ likes: -1 });
-    return res.status(200).send({ data: projectPayload, success: true, message: "Projects loaded successfully" });
+
+    const pendingUsers = new Set();
+    const approvedUsers = new Set();
+
+    // Get users list mapping for connection status with current user
+    const reqPending = await model.Request.find({
+      $or: [
+        { isRequestSent: true, isApproved: false, createdBy: user_id },
+        { isRequestSent: true, isApproved: false, createdFor: user_id },
+      ],
+    });
+    const reqApproved = await model.Request.find({
+      $or: [
+        { isApproved: true, createdBy: user_id },
+        { isApproved: true, createdFor: user_id },
+      ],
+    });
+
+    const currentUser = await model.User.findById({ _id: user_id });
+    await Promise.all(
+      reqApproved.map(async (request) => {
+        const userObj1 = await model.User.findById({ _id: request.createdFor });
+        const userObj2 = await model.User.findById({ _id: request.createdBy });
+        if (currentUser.email !== userObj1.email) {
+          approvedUsers.add(userObj1.email);
+        }
+        if (currentUser.email !== userObj2.email) {
+          approvedUsers.add(userObj2.email);
+        }
+      })
+    );
+
+    await Promise.all(
+      reqPending.map(async (request) => {
+        const userObj1 = await model.User.findById({ _id: request.createdFor });
+        const userObj2 = await model.User.findById({ _id: request.createdBy });
+        if (currentUser.email !== userObj1.email) {
+          pendingUsers.add(userObj1.email);
+        }
+        if (currentUser.email !== userObj2.email) {
+          pendingUsers.add(userObj2.email);
+        }
+      })
+    );
+
+    return res.status(200).send({
+      data: projectPayload,
+      usersStatus: [Array.from(pendingUsers), Array.from(approvedUsers)],
+      success: true,
+      message: "Projects loaded successfully",
+    });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

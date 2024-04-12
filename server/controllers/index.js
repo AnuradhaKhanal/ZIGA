@@ -13,6 +13,7 @@ import {
   getPendingRequests,
   getApprovedRequests,
   deleteRequest,
+  deleteRequestbyReceiverEmail,
   approveRequest,
 } from "./request.controller.js";
 
@@ -35,6 +36,7 @@ export default {
   sendRequest,
   getPendingRequests,
   getApprovedRequests,
+  deleteRequestbyReceiverEmail,
   approveRequest,
   getUsers,
   getUserById,

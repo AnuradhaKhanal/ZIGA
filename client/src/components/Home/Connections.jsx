@@ -43,15 +43,7 @@ const Connections = () => {
         setMsg({ showMsg: true, success: data.success, text: data.message });
       });
     setIsBusy(false);
-    setConnData([
-      {
-        name: "No data",
-        email: "",
-        purpose: "",
-        createdAt: "",
-        id: "",
-      },
-    ]);
+    loadConnections();
   };
 
   const handleRefresh = () => {
@@ -198,7 +190,6 @@ const Connections = () => {
       <FormConnectionDialog open={open} onClose={handleClose} onRefresh={handleRefresh} />
       <Fab
         variant="extended"
-        // color="success"
         onClick={handleClickOpen}
         sx={{
           position: "fixed",

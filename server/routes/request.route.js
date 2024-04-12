@@ -10,5 +10,6 @@ router.patch("/approve/:id", auth, controller.approveRequest);
 router.get("/users/all/:email", auth, controller.getUsers);
 router.get("/users/:id", auth, controller.getUserById);
 router.delete("/delete/:id", auth, controller.deleteRequest);
+router.delete("/delete/:emailFor/:emailBy", auth, controller.deleteRequestbyReceiverEmail);
 
 export default router;

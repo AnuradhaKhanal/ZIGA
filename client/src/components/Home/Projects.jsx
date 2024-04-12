@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { Grid, Typography, Card, List, Fab } from "@mui/material";
+import { Grid, Typography, Card, List, Fab, Button } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import { message } from "../../helpers/Message";
 import Message from "../Message/Message";
 import LoadingScreen from "../Loading/LoadingScreen";
 import FormProjectDialog from "../Form/FormProjectDialog";
+import FormProjectToRequest from "../Form/FormProjectToRequest";
 import API from "../../api";
 
 const Projects = () => {
@@ -17,9 +18,15 @@ const Projects = () => {
       price: "",
     },
   ]);
+  const [pending, setPending] = useState([]);
+  const [approved, setApproved] = useState([]);
   const [msg, setMsg] = useState(message);
+  const [emailFor, setEmailFor] = useState("");
   const [isBusy, setIsBusy] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openRequest, setOpenRequest] = useState(false);
+  const user = JSON.parse(localStorage.getItem("profile"));
+  const { _id, email } = user?.data?.userPayload;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,19 +36,46 @@ const Projects = () => {
     setOpen(false);
   };
 
+  const handleClickOpenRequest = (val) => {
+    setOpenRequest(true);
+    setEmailFor(val);
+  };
+
+  const handleCloseRequest = () => {
+    setOpenRequest(false);
+    setEmailFor("");
+  };
+
   const handleRefresh = () => {
     window.location.reload(true);
   };
 
+  const handleDelete = (emailFor) => {
+    setIsBusy(true);
+    API.delete(`/request/delete/${emailFor}/${email}`)
+      .then((response) => {
+        const { data } = response;
+        setMsg({ showMsg: true, success: data.success, text: data.message });
+      })
+      .catch((error) => {
+        const { data } = error.response;
+        setMsg({ showMsg: true, success: data.success, text: data.message });
+      });
+    setIsBusy(false);
+    loadProjects();
+  };
+
   const loadProjects = useCallback(() => {
     setIsBusy(true);
-    API.get("/project/view")
+    API.get(`/project/view/${_id}`)
       .then((response) => {
         const { data } = response;
         setIsBusy(false);
         setMsg({ showMsg: true, success: data.success, text: data.message });
         if (data.data.length !== 0) {
           setProjectData(data.data);
+          setApproved(data.usersStatus[1]);
+          setPending(data.usersStatus[0]);
         }
       })
       .catch((error) => {
@@ -49,7 +83,7 @@ const Projects = () => {
         setIsBusy(false);
         setMsg({ showMsg: true, success: data.success, text: data.message });
       });
-  }, []);
+  }, [_id]);
 
   useEffect(() => {
     loadProjects();
@@ -165,14 +199,54 @@ const Projects = () => {
                     {`${project.price} USD`}
                   </Typography>
                 </Grid>
+                {email !== project.email && (
+                  <Grid
+                    item
+                    xs={12}
+                    md={8}
+                    lg={4}
+                    sx={{ marginRight: "20px", marginLeft: "20px", marginBottom: "20px" }}
+                  >
+                    {pending.includes(project.email) && (
+                      <Button
+                        variant="contained"
+                        color="info"
+                        disabled={true}
+                        sx={{ width: "10%", fontSize: "13px", textTransform: "none", borderRadius: "10px" }}
+                      >
+                        Sent
+                      </Button>
+                    )}
+                    {approved.includes(project.email) && (
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        sx={{ width: "10%", fontSize: "13px", textTransform: "none", borderRadius: "10px" }}
+                        onClick={() => handleDelete(project.email)}
+                      >
+                        Unfollow
+                      </Button>
+                    )}
+                    {!pending.includes(project.email) && !approved.includes(project.email) && (
+                      <Button
+                        variant="contained"
+                        color="info"
+                        sx={{ width: "10%", fontSize: "13px", textTransform: "none", borderRadius: "10px" }}
+                        onClick={() => handleClickOpenRequest(project.email)}
+                      >
+                        Follow
+                      </Button>
+                    )}
+                  </Grid>
+                )}
               </Grid>
             </Card>
           ))}
       </List>
       <FormProjectDialog open={open} onClose={handleClose} onRefresh={handleRefresh} />
+      <FormProjectToRequest open={openRequest} onClose={handleCloseRequest} onRefresh={handleRefresh} data={emailFor} />
       <Fab
         variant="extended"
-        // color="success"
         onClick={handleClickOpen}
         sx={{
           position: "fixed",

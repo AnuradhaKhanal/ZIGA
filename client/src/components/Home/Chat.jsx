@@ -115,7 +115,10 @@ const Chat = () => {
           <List>
             <ListItem key="You">
               <ListItemIcon>
-                <Avatar alt="You" src="https://material-ui.com/static/images/avatar/1.jpg" />
+                {/* <Avatar alt="You" src="https://material-ui.com/static/images/avatar/1.jpg" /> */}
+                <Avatar alt={username} sx={{ backgroundColor: "#6c5abf" }}>
+                  {username?.charAt(0).toUpperCase()}
+                </Avatar>
               </ListItemIcon>
               <ListItemText primary="You"></ListItemText>
               <ListItemText secondary="online" align="right"></ListItemText>

@@ -19,7 +19,11 @@ export const getApprovedRequests = async (req, res) => {
 export const getPendingRequests = async (req, res) => {
   const { user_id } = req.params;
   try {
-    const requestPayload = await model.Request.find({ isApproved: false, createdFor: user_id }).sort({ createdAt: -1 });
+    const requestPayload = await model.Request.find({
+      isApproved: false,
+      isRequestSent: true,
+      createdFor: user_id,
+    }).sort({ createdAt: -1 });
     return res.status(200).send({ data: requestPayload, success: true, message: "Loading pending requests..." });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
@@ -31,6 +35,23 @@ export const deleteRequest = async (req, res) => {
   try {
     await model.Request.deleteOne({
       _id: id,
+    });
+    return res.status(201).send({ success: true, message: "Connection request deleted" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+export const deleteRequestbyReceiverEmail = async (req, res) => {
+  const { emailFor, emailBy } = req.params;
+  try {
+    const userFor = await model.User.findOne({ email: emailFor });
+    const userBy = await model.User.findOne({ email: emailBy });
+    await model.Request.deleteOne({
+      $or: [
+        { createdFor: userFor._id, createdBy: userBy._id },
+        { createdBy: userFor._id, createdFor: userBy._id },
+      ],
     });
     return res.status(201).send({ success: true, message: "Connection request deleted" });
   } catch (error) {
@@ -60,6 +81,7 @@ export const sendRequest = async (req, res) => {
     const requestPayload = await model.Request.create({
       createdBy: userBy._id,
       createdFor: userFor._id,
+      isRequestSent: true,
       purpose,
     });
     return res.status(201).send({ data: requestPayload, success: true, message: "Connection request sent" });

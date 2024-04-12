@@ -10,6 +10,7 @@ import {
   Typography,
   Drawer,
   IconButton,
+  Button,
   List,
   ListItem,
   ListItemButton,
@@ -25,6 +26,7 @@ import {
   ShoppingBag as ShoppingBagIcon,
   AccountCircle as AccountCircleIcon,
   HourglassBottom as HourglassBottomIcon,
+  ExitToAppOutlined as ExitToAppOutlinedIcon,
 } from "@mui/icons-material";
 
 import Chat from "../../components/Home/Chat";
@@ -166,7 +168,6 @@ const HomePage = (props) => {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
           color: "#243949",
-          // background: "linear-gradient(to right top, #243949, #513fa4)",
         }}
       >
         <Toolbar>
@@ -182,6 +183,15 @@ const HomePage = (props) => {
           <Typography variant="h6" noWrap component="div">
             {`${tab}`}
           </Typography>
+          <Button
+            variant="text"
+            color="secondary"
+            sx={{ width: "10%", fontSize: "13px", textTransform: "none", marginLeft: "65rem" }}
+            onClick={logout}
+          >
+            Logout
+            <ExitToAppOutlinedIcon sx={{ padding: "3px" }} />
+          </Button>
         </Toolbar>
       </AppBar>
       <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
