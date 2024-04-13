@@ -1,4 +1,4 @@
-import { PhotoCamera as PhotoCameraIcon } from "@mui/icons-material";
+// import { PhotoCamera as PhotoCameraIcon } from "@mui/icons-material";
 import { Badge, Avatar, Grid, Typography, Card } from "@mui/material";
 
 const Profile = () => {
@@ -12,18 +12,18 @@ const Profile = () => {
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            badgeContent={
-              <PhotoCameraIcon
-                sx={{
-                  border: "5px solid white",
-                  backgroundColor: "#ff558f",
-                  borderRadius: "50%",
-                  padding: ".2rem",
-                  width: 35,
-                  height: 35,
-                }}
-              ></PhotoCameraIcon>
-            }
+            // badgeContent={
+            //   <PhotoCameraIcon
+            //     sx={{
+            //       border: "5px solid white",
+            //       backgroundColor: "#ff558f",
+            //       borderRadius: "50%",
+            //       padding: ".2rem",
+            //       width: 35,
+            //       height: 35,
+            //     }}
+            //   ></PhotoCameraIcon>
+            // }
           >
             <Avatar
               sx={{ width: 100, height: 100, mb: 1.5, backgroundColor: "#2596be" }}
@@ -81,7 +81,7 @@ const Profile = () => {
                 color: "grey",
               }}
             >
-              {username}
+              {username ? username : "Not Specified"}
             </Typography>
             <Typography
               style={{
@@ -90,7 +90,7 @@ const Profile = () => {
                 color: "grey",
               }}
             >
-              {gender}
+              {gender ? gender : "Not Specified"}
             </Typography>
             <Typography
               style={{
@@ -99,7 +99,7 @@ const Profile = () => {
                 color: "grey",
               }}
             >
-              {phone}
+              {phone ? phone : "Not Specified"}
             </Typography>
             <Typography
               style={{

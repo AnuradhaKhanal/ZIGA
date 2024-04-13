@@ -8,7 +8,7 @@ export const validatePhoneNumber = (val) => {
 };
 
 export const validateGender = (val) => {
-  const genders = ["Male", "Female", "Non-Binary"];
+  const genders = ["Male", "Female", "Non-Binary", "Not Specified"];
   return genders.includes(val);
 };
 

@@ -1,4 +1,4 @@
-import { getOTP, verifyOTP, signup, signin, getUsers, getUserById } from "./user.controller.js";
+import { getOTP, verifyOTP, signup, signin, getUsers, getUserById, signinGoogle } from "./user.controller.js";
 import { createProfile, updateProfile, getProfile } from "./profile.controller.js";
 import {
   getChatByUser,
@@ -22,6 +22,7 @@ export default {
   verifyOTP,
   signup,
   signin,
+  signinGoogle,
   createProfile,
   updateProfile,
   getProfile,

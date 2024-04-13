@@ -186,7 +186,7 @@ const HomePage = (props) => {
           <Button
             variant="text"
             color="secondary"
-            sx={{ width: "10%", fontSize: "13px", textTransform: "none", marginLeft: "65rem" }}
+            sx={{ width: "10%", fontSize: "13px", textTransform: "none", marginLeft: "60rem" }}
             onClick={logout}
           >
             Logout

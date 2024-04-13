@@ -61,9 +61,9 @@ export const getProjects = async (req, res) => {
 };
 
 export const createProject = async (req, res) => {
-  const { email, phone, designation, summary, reason, price } = req.body;
+  const { email, designation, summary, reason, price } = req.body;
   try {
-    const user = await model.User.findOne({ email, phone });
+    const user = await model.User.findOne({ email });
     if (!user) {
       return res.status(400).send({ success: false, message: "User does not exist" });
     }
@@ -86,9 +86,9 @@ export const createProject = async (req, res) => {
 };
 
 export const updateProject = async (req, res) => {
-  const { email, phone, designation, summary, reason, price, likes } = req.body;
+  const { email, designation, summary, reason, price, likes } = req.body;
   try {
-    const user = await model.User.findOne({ email, phone });
+    const user = await model.User.findOne({ email });
     if (!user) {
       return res.status(400).send({ success: false, message: "User does not exist" });
     }

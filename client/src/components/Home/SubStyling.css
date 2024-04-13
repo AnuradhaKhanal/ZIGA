@@ -31,7 +31,7 @@
   padding-bottom: 96px;
   border-radius: 4px;
   border: 1px solid #262626;
-  background-color: #26262620;
+  background-color: #3f3f3f;
   box-shadow: 0 0 32px transparent;
   text-align: center;
 }
@@ -50,7 +50,7 @@
 
 .pricing-card:hover {
   border-color: var(--col);
-  background-color: #26262680;
+  background-color: rgb(50, 50, 50);
   box-shadow: 0 0 32px #171717;
   transform: translateY(-16px) scale(1.02);
   transition: all 0.5s ease;
@@ -69,6 +69,7 @@
 
 .pricing-card .heading p {
   color: #a3a3a3;
+  /* color: #484848; */
   font-size: 14px;
   font-weight: lighter;
 }

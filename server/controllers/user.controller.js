@@ -7,6 +7,32 @@ import util from "../util/index.js";
 dotenv.config();
 const secret = process.env.JWT_SECRET;
 
+// google auth
+export const signinGoogle = async (req, res) => {
+  const { email, username } = req.body;
+  try {
+    let userPayload = await model.User.findOne({ email });
+
+    if (!userPayload) {
+      userPayload = await model.User.create({
+        username,
+        gender: "Not Specified",
+        email,
+      });
+    }
+    const token = jwt.sign({ email: userPayload.email, id: userPayload._id }, secret, {
+      expiresIn: "2h",
+    });
+    const authPayload = {
+      userPayload,
+      token,
+    };
+    return res.status(200).send({ data: authPayload, success: true, message: "Google login successful" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
 //sign in
 export const signin = async (req, res) => {
   const { phone, email } = req.body;

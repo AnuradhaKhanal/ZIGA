@@ -60,9 +60,9 @@ export const deleteRequestbyReceiverEmail = async (req, res) => {
 };
 
 export const sendRequest = async (req, res) => {
-  const { emailBy, phoneBy, purpose, emailFor } = req.body;
+  const { emailBy, purpose, emailFor } = req.body;
   try {
-    const userBy = await model.User.findOne({ email: emailBy, phone: phoneBy });
+    const userBy = await model.User.findOne({ email: emailBy });
     const userFor = await model.User.findOne({ email: emailFor });
     if (!userBy) {
       return res.status(400).send({ success: false, message: "Session expired! Please login again" });

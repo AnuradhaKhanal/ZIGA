@@ -42,9 +42,9 @@ export const getApprovedUsers = async (req, res) => {
     const userIds = new Set();
 
     requestPayload.map(async (req) => {
-      if (req.createdBy !== user_id) {
+      if (req.createdBy.toString() !== user_id) {
         userIds.add(req.createdBy);
-      } else if (req.createdFor !== user_id) {
+      } else if (req.createdFor.toString() !== user_id) {
         userIds.add(req.createdFor);
       }
     });
